@@ -18,7 +18,7 @@ done
 
 echo ${target}
 
-until $(curl --output /dev/null --silent --head --fail ${target}); do
+until $(curl --output /dev/null --silent --head --fail -u admin:admin ${target}); do
     if [ ${attempt_counter} -eq ${max_attempts} ];then
       echo "Max attempts reached"
       exit 1

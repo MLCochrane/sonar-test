@@ -1,0 +1,8 @@
+FROM sonarsource/sonar-scanner-cli:latest
+
+WORKDIR /usr/src
+
+COPY wait-it-out.sh sonar-project.properties app ./
+COPY app ./app
+
+CMD bash ./wait-it-out.sh -t "server:9000/api/projects/search" -c "sonar-scanner"

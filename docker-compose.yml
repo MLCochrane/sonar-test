@@ -2,14 +2,12 @@ version: "3.3"
 
 services:
   db:
-    image: postgres:12
     environment:
       POSTGRES_USER: sonar
       POSTGRES_PASSWORD: sonar
-    volumes:
-      - postgresql:/var/lib/postgresql
-      - postgresql_data:/var/lib/postgresql/data
-      - ./scripts:/usr/src
+    build:
+      context: .
+      dockerfile: Dockerfile.db
 
   server:
     image: sonarqube:latest
@@ -21,26 +19,12 @@ services:
       SONAR_JDBC_PASSWORD: sonar
     ports:
       - 9000:9000
-    volumes:
-      - data:/opt/sonarqube/data
-      - logs:/opt/sonarqube/logs
-      - extensions:/opt/sonarqube/extension
 
   scanner:
-    image: sonarsource/sonar-scanner-cli:latest
     depends_on:
       - server
     environment:
       SONAR_HOST_URL: "http://server:9000"
-    volumes:
-      - ./:/usr/src
-    #command: bash ./wait-it-out.sh -t "server:9000" -c "sonar-scanner"
-    command: ls -la
-
-
-volumes:
-  data:
-  logs:
-  extensions:
-  postgresql:
-  postgresql_data:
+    build:
+      context: .
+      dockerfile: Dockerfile.scanner
