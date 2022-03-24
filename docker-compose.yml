@@ -34,7 +34,8 @@ services:
       SONAR_HOST_URL: "http://server:9000"
     volumes:
       - ./:/usr/src
-    command: bash ./wait-it-out.sh -t "server:9000" -c "sonar-scanner"
+    #command: bash ./wait-it-out.sh -t "server:9000" -c "sonar-scanner"
+    command: ls -la
 
 
 volumes:
