@@ -13,8 +13,11 @@ jobs:
           command: |
             mkdir -p ~/reports
       - run:
+          name: List files
+          command: ls -la
+      - run:
           name: Start containers
-          command: docker-compose -f docker-compose.yml up --build --abort-on-container-exit
+          command: docker-compose -f docker-compose.yml up --abort-on-container-exit
       - run:
           name: Restart our PostgreSQL container to dump issues
           command: docker start sonarqube_db_1

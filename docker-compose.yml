@@ -32,7 +32,6 @@ services:
       - server
     environment:
       SONAR_HOST_URL: "http://server:9000"
-    tty: true
     volumes:
       - ./:/usr/src
     command: bash ./wait-it-out.sh -t "server:9000" -c "sonar-scanner"
