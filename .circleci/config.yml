@@ -1,0 +1,38 @@
+version: 2.1
+jobs:
+  sonar:
+    docker:
+      - image: cimg/base
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 20.10.7
+          docker_layer_caching: true
+      - run:
+          name: Make reports folder
+          command: |
+            mkdir -p ~/reports
+      - run:
+          name: Start containers
+          command: docker-compose -f docker-compose.yml up --build --abort-on-container-exit
+      - run:
+          name: Restart our PostgreSQL container to dump issues
+          command: docker start sonarqube_db_1
+      - run:
+          name: Create CSV with issues
+          command: docker exec sonarqube_db_1 bash /usr/src/dump-csv.sh
+      - run:
+          name: Copy test artifacts
+          command: docker cp sonarqube_db_1:/tmp/dump.csv ~/reports
+      - run:
+          name: Stop containers
+          command: docker-compose -f docker-compose.yml down
+      - store_test_results:
+          path: ~/reports
+      - store_artifacts:
+          path: ~/reports
+
+workflows:
+  sast:
+    jobs:
+      - sonar
