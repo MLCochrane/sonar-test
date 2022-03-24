@@ -16,6 +16,9 @@ jobs:
           name: List files
           command: ls -la
       - run:
+          name: Attempt to update mmap limits
+          command: sysctl -w vm.max_map_count=262144
+      - run:
           name: Start containers
           command: docker-compose -f docker-compose.yml up --abort-on-container-exit
       - run:
