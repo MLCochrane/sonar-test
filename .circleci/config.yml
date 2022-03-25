@@ -23,13 +23,13 @@ jobs:
           command: docker-compose -f docker-compose.yml up --abort-on-container-exit
       - run:
           name: Restart our PostgreSQL container to dump issues
-          command: docker start sonarqube_db_1
+          command: docker start sonar_db
       - run:
           name: Create CSV with issues
-          command: docker exec sonarqube_db_1 bash /usr/src/dump-csv.sh
+          command: docker exec sonar_db bash /usr/src/dump-csv.sh
       - run:
           name: Copy test artifacts
-          command: docker cp sonarqube_db_1:/tmp/dump.csv ~/reports
+          command: docker cp sonar_db:/tmp/dump.csv ~/reports
       - run:
           name: Stop containers
           command: docker-compose -f docker-compose.yml down

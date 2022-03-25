@@ -2,14 +2,16 @@ version: "3.3"
 
 services:
   db:
-    environment:
-      POSTGRES_USER: sonar
-      POSTGRES_PASSWORD: sonar
+    container_name: sonar_db
     build:
       context: .
       dockerfile: Dockerfile.db
+    environment:
+      POSTGRES_USER: sonar
+      POSTGRES_PASSWORD: sonar
 
   server:
+    container_name: sonar_server
     image: sonarqube:latest
     depends_on:
       - db
@@ -22,10 +24,11 @@ services:
       - 9000:9000
 
   scanner:
+    container_name: sonar_scanner
     depends_on:
       - server
-    environment:
-      SONAR_HOST_URL: "http://server:9000"
     build:
       context: .
       dockerfile: Dockerfile.scanner
+    environment:
+      SONAR_HOST_URL: "http://server:9000"
