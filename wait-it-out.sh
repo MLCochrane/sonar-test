@@ -3,7 +3,7 @@
 # Based on answer here: https://stackoverflow.com/a/50583452
 
 attempt_counter=0
-max_attempts=200
+max_attempts=30
 
 while [[ "$#" -gt 0 ]]; do
     case $1 in
@@ -24,7 +24,7 @@ until $(curl --output /dev/null --silent --head --fail -u admin:admin ${target})
 
     printf "."
     attempt_counter=$(($attempt_counter+1))
-    sleep 10
+    sleep 5
 done
 
 # If target up then run command
