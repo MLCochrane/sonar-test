@@ -3,7 +3,7 @@
 # Based on answer here: https://stackoverflow.com/a/50583452
 
 attempt_counter=0
-max_attempts=20
+max_attempts=90
 
 while [[ "$#" -gt 0 ]]; do
     case $1 in
