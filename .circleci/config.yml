@@ -19,11 +19,11 @@ jobs:
           name: Restart our DB and server containers to dump issues, check status
           command: docker start sonar_db sonar_server
       - run:
-          name: Create CSV with issues
-          command: docker exec sonar_db bash /usr/src/dump-csv.sh
+          name: Create file with issues
+          command: docker exec sonar_db bash /usr/src/export-issues.sh
       - run:
           name: Copy test artifacts
-          command: docker cp sonar_db:/tmp/dump.csv ~/reports
+          command: docker cp sonar_db:/tmp/dump.json ~/reports/
       - run:
           name: Check server status
           command: bash ./scripts/get-status.sh
