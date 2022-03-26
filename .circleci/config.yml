@@ -7,20 +7,17 @@ jobs:
       - checkout
       - setup_remote_docker:
           version: 20.10.7
-          docker_layer_caching: true
+          docker_layer_caching: true # allows us to cache the containers we use INSIDE our job container - they have to be downloaded in full each time otherwise
       - run:
           name: Make reports folder
           command: |
             mkdir -p ~/reports
       - run:
-          name: List files
-          command: ls -la
-      - run:
           name: Start containers
           command: docker-compose -f docker-compose.yml up --build --abort-on-container-exit
       - run:
-          name: Restart our PostgreSQL container to dump issues
-          command: docker start sonar_db
+          name: Restart our DB and server containers to dump issues, check status
+          command: docker start sonar_db sonar_server
       - run:
           name: Create CSV with issues
           command: docker exec sonar_db bash /usr/src/dump-csv.sh
@@ -28,10 +25,11 @@ jobs:
           name: Copy test artifacts
           command: docker cp sonar_db:/tmp/dump.csv ~/reports
       - run:
+          name: Check server status
+          command: bash ./scripts/get-status.sh
+      - run:
           name: Stop containers
           command: docker-compose -f docker-compose.yml down
-      - store_test_results:
-          path: ~/reports
       - store_artifacts:
           path: ~/reports
 

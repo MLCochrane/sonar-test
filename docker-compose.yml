@@ -1,3 +1,7 @@
+# Sets up our 3 containers: PostgreSQL DB, the server and the scanner.
+# Custom local dockerfiles for the db and scanner is really just so we
+# can copy over project files into the container since CircleCI doesn't
+# let us mount local volumes.
 version: "3.3"
 
 services:
@@ -5,7 +9,7 @@ services:
     container_name: sonar_db
     build:
       context: .
-      dockerfile: Dockerfile.db
+      dockerfile: Dockerfile.database
     environment:
       POSTGRES_USER: sonar
       POSTGRES_PASSWORD: sonar
@@ -19,6 +23,16 @@ services:
       SONAR_JDBC_URL: jdbc:postgresql://db:5432/sonar
       SONAR_JDBC_USERNAME: sonar
       SONAR_JDBC_PASSWORD: sonar
+
+      # This one is a bit weird, but Sonarqube has an embedded
+      # Elasticsearch instance and the host machine's system
+      # limits on mmap counts is by default too low.
+      # While we could simply increase that with sysctl on
+      # our own machine, we can't do that in CircleCI.
+      # Disabling possibly has some performance issues, but
+      # we need to do so here.
+      #
+      # https://www.elastic.co/guide/en/elasticsearch/reference/current/index-modules-store.html#file-system
       SONAR_SEARCH_JAVAADDITIONALOPTS: -Dnode.store.allow_mmap=false
     ports:
       - 9000:9000

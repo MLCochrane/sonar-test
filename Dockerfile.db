@@ -1,4 +1,0 @@
-# This is just because we can't mount a volume from the job space into our container
-FROM postgres:12
-
-COPY ./scripts/dump-csv.sh ./usr/src/
