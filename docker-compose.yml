@@ -16,7 +16,9 @@ services:
 
   server:
     container_name: sonar_server
-    image: sonarqube:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.server
     depends_on:
       - db
     environment:
@@ -34,8 +36,6 @@ services:
       #
       # https://www.elastic.co/guide/en/elasticsearch/reference/current/index-modules-store.html#file-system
       SONAR_SEARCH_JAVAADDITIONALOPTS: -Dnode.store.allow_mmap=false
-    ports:
-      - 9000:9000
 
   scanner:
     container_name: sonar_scanner

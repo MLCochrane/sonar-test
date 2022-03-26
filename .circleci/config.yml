@@ -19,14 +19,14 @@ jobs:
           name: Restart our DB and server containers to dump issues, check status
           command: docker start sonar_db sonar_server
       - run:
-          name: Create file with issues
+          name: Create file with issues from DB container
           command: docker exec sonar_db bash /usr/src/export-issues.sh
       - run:
           name: Copy test artifacts
           command: docker cp sonar_db:/tmp/dump.json ~/reports/
       - run:
-          name: Check server status
-          command: bash ./scripts/get-status.sh
+          name: Check server status from server container
+          command: docker exec sonar_server bash ./get-status.sh
       - run:
           name: Stop containers
           command: docker-compose -f docker-compose.yml down
