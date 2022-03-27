@@ -14,13 +14,8 @@
 PROJECTKEY="my:project"
 
 QGSTATUS=`wget -qO- http://admin:admin@server:9000/api/qualitygates/project_status?projectKey=$PROJECTKEY | jq '.projectStatus.status' | tr -d '"'`
-# We just want an exit code based on the project status - WARN vs. ERROR is less
-# a concern here.
-if [ "$QGSTATUS" = "OK" ]
-then
-  echo "Status is OK"
-  exit 0
-else
-  echo "Status was not OK - review issues artifact for more details."
-  exit 1
-fi
+
+# Saving to file so we can throw exit code _after_ we get the issues file from
+# our DB container. Throwing the exit code here means an error stops the
+# CircleCI job and we can't see what the issues we need to fix are.
+echo "$QGSTATUS" >> ./status.txt

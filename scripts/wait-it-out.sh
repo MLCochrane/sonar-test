@@ -9,6 +9,7 @@ function cleanup()
 {
     echo "Checking project status..."
     bash ./get-status.sh
+    echo "Status saved to file, shutting down..."
 }
 
 trap cleanup EXIT

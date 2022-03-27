@@ -13,7 +13,9 @@ jobs:
           command: mkdir -p ~/reports
       - run:
           name: Ensure scripts executable
-          command: chmod a+x wait-it-out.sh export-issues.sh get-status.sh
+          command: |
+            cd ./scripts
+            chmod a+x *
       - run:
           name: Start containers
           command: docker-compose -f docker-compose.yml up --build --abort-on-container-exit
@@ -26,6 +28,13 @@ jobs:
       - run:
           name: Copy test artifacts
           command: docker cp sonar_db:/tmp/dump.json ~/reports/
+      - run:
+          name: Evaluate status of project
+          command: |
+            docker cp sonar_scanner:/usr/src/status.txt ./scripts/status.txt
+            cd ./scripts
+            bash ./check-status.sh
+      # Is there any real reason we should stop them directly???
       - run:
           name: Stop containers
           command: docker-compose -f docker-compose.yml down

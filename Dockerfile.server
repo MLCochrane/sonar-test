@@ -1,6 +1,0 @@
-FROM sonarqube:latest
-
-# Just so we can parse JSON status from sonarqube API request
-RUN apk add jq
-
-COPY ./scripts/get-status.sh ./get-status.sh
