@@ -25,6 +25,9 @@ jobs:
           name: Copy test artifacts
           command: docker cp sonar_db:/tmp/dump.json ~/reports/
       - run:
+          name: DEBUG_ONE - Sleeping to see if server responds in next step
+          command: sleep 5
+      - run:
           name: Check server status from server container
           command: docker exec sonar_server bash ./get-status.sh
       - run:
