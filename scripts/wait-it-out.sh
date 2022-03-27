@@ -5,6 +5,14 @@
 attempt_counter=0
 max_attempts=30
 
+function cleanup()
+{
+    echo "Checking project status..."
+    bash ./get-status.sh
+}
+
+trap cleanup EXIT
+
 while [[ "$#" -gt 0 ]]; do
     case $1 in
         -t|--target) target="$2"; shift ;;

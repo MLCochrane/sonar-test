@@ -16,9 +16,7 @@ services:
 
   server:
     container_name: sonar_server
-    build:
-      context: .
-      dockerfile: Dockerfile.server
+    image: sonarqube:latest
     depends_on:
       - db
     environment:

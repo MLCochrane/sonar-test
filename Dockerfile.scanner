@@ -1,8 +1,11 @@
 FROM sonarsource/sonar-scanner-cli:latest
 
+# Just so we can parse JSON status from sonarqube API request
+RUN apk add jq
+
 WORKDIR /usr/src
 
-COPY ./scripts/wait-it-out.sh sonar-project.properties ./
+COPY ./scripts/wait-it-out.sh ./scripts/get-status.sh sonar-project.properties ./
 COPY app ./app
 
 CMD bash ./wait-it-out.sh -t "server:9000/api/projects/search" -c "sonar-scanner"

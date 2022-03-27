@@ -13,8 +13,7 @@
 
 PROJECTKEY="my:project"
 
-QGSTATUS=`wget -qO- http://admin:admin@localhost:9000/api/qualitygates/project_status?projectKey=$PROJECTKEY | jq '.projectStatus.status' | tr -d '"'`
-
+QGSTATUS=`wget -qO- http://admin:admin@server:9000/api/qualitygates/project_status?projectKey=$PROJECTKEY | jq '.projectStatus.status' | tr -d '"'`
 # We just want an exit code based on the project status - WARN vs. ERROR is less
 # a concern here.
 if [ "$QGSTATUS" = "OK" ]

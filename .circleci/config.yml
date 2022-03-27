@@ -10,26 +10,22 @@ jobs:
           docker_layer_caching: true # allows us to cache the containers we use INSIDE our job container - they have to be downloaded in full each time otherwise
       - run:
           name: Make reports folder
-          command: |
-            mkdir -p ~/reports
+          command: mkdir -p ~/reports
+      - run:
+          name: Ensure scripts executable
+          command: chmod a+x wait-it-out.sh export-issues.sh get-status.sh
       - run:
           name: Start containers
           command: docker-compose -f docker-compose.yml up --build --abort-on-container-exit
       - run:
-          name: Restart our DB and server containers to dump issues, check status
-          command: docker start sonar_db sonar_server
+          name: Restart our DB container to dump issues
+          command: docker start sonar_db
       - run:
           name: Create file with issues from DB container
           command: docker exec sonar_db bash /usr/src/export-issues.sh
       - run:
           name: Copy test artifacts
           command: docker cp sonar_db:/tmp/dump.json ~/reports/
-      - run:
-          name: DEBUG_ONE - Sleeping to see if server responds in next step
-          command: sleep 5
-      - run:
-          name: Check server status from server container
-          command: docker exec sonar_server bash ./get-status.sh
       - run:
           name: Stop containers
           command: docker-compose -f docker-compose.yml down
